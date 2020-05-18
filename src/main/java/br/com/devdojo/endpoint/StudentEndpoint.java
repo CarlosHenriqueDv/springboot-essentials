@@ -1,16 +1,15 @@
 package br.com.devdojo.endpoint;
 
 
-import br.com.devdojo.error.CustomErrorType;
 import br.com.devdojo.error.ResourceNotFoundException;
 import br.com.devdojo.model.Student;
 import br.com.devdojo.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
@@ -47,7 +46,7 @@ public class StudentEndpoint {
 
     //@RequestMapping(method = RequestMethod.POST)
     @PostMapping // Subistitui o @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<?> save(@RequestBody Student student){
+    public ResponseEntity<?> save(@Valid @RequestBody Student student){
 
         return new ResponseEntity<>(studentDAO.save(student), HttpStatus.OK);
     }
@@ -65,7 +64,7 @@ public class StudentEndpoint {
     //@RequestMapping(method = RequestMethod.PUT)
     @PutMapping //Substitui o @RequestMapping(method = RequestMethod.PUT
     public ResponseEntity<?> update(@RequestBody Student student){
-
+        verifyIfStudentExists(student.getId());
         studentDAO.save(student);
         return new ResponseEntity<>(HttpStatus.OK);
     }
